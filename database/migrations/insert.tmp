@@ -1,0 +1,4 @@
+INSERT INTO atattack_plans (name, description, value, level, status, selected, author_id, created_at, updated_at) VALUES 
+                    ('Basic Attack - 6 messages', 'Basic Attack - 6 messages', 0.89, 5, 1, 0, 1,'2017-02-09 11:00', '2017-02-09 11:00'),
+                    ('Barrage Attack - 13 messages', 'Barrage Attack - 13 messages', 1.39, 5, 1, 0, 1,'2017-02-09 11:00', '2017-02-09 11:00'),
+                    ('Death By Herd - 30 messages', 'Death By Herd - 30 messages', 2.99, 5, 1, 0, 1,'2017-02-09 11:00', '2017-02-09 11:00');

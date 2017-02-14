@@ -1,0 +1,35 @@
+body {   
+	background-image: url(img/bg.jpg);      
+	background-position: center center;      
+	background-repeat: no-repeat;      
+	background-attachment: fixed;      
+	background-size: cover;      
+	background-color: #008000; 
+}
+.logo {
+    margin-top: 50px;
+}
+.tagline {
+    color: #fff;
+    font-style: italic;
+}
+.payment {
+    background: #fff;
+    padding: 20px 15px;
+    border-radius: 7px;
+    box-shadow: 3px 3px 5px rgba(25,25,25,.2);
+}
+.main-footer {
+	margin-top: 20px;
+	color: white;
+}
+
+.main-footer a {
+	color: white;
+}
+.stripe-button {
+	color: red !important;
+}
+script {
+	color: red;
+}
