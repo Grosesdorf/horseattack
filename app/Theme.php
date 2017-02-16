@@ -4,11 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AttackPlans extends Model
+class Theme extends Model
 {
-	/**
+    /**
 	* @var string
 	*/
-	protected $table = 'attack_plans';
+	protected $table = 'themes';
 	public $timestamps = false;
 }

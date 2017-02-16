@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
     $('#stripeButton').on('click', function(event) {
         event.preventDefault();
         var $button = $(this),
@@ -9,6 +10,15 @@ $(document).ready(function() {
             }
         });
         StripeCheckout.open(opts);
+    });
+    // body background-image
+    var bodyPathImg = $('#selectTheme').attr('data-path-img');
+    $('body').css('backgroundImage', 'url('+bodyPathImg+')');
+
+    $( "#selectTheme" ).change(function() {
+        // $urlSite = location.hostname;
+        // location = $urlSite+'/showplan/'+$('#selectTheme').val();
+        location = '/showplan/'+$('#selectTheme').val();
     });
 
     $('#stripeButton').attr('data-amount', function(event) {

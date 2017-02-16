@@ -34,10 +34,8 @@
                 </div>
             @endif
 
-            <!-- <div class="content">
-                <div class="title m-b-md">
-                </div>
-            </div> -->
+          
+
         </div>
 
                 <div class="container-fluid body-text">
