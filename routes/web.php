@@ -13,6 +13,16 @@
 
 Route::get('/', 'HomeController@index');
 
+Route::post('/sendmessage', 'SendMessageController@index');
+
+// Route::post('/sendmessage', array('before' => 'csrf', function () {
+// 				  $rules = array(
+// 				    'UserPhone' => array('required', 'text'),
+// 				    'UserName' => array('required', 'text')
+// 				  );
+// 				}
+// ));
+
 Route::get('showplan/{id}', 'HomeController@showPlan');
 
 Auth::routes();

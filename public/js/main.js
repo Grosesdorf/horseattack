@@ -1,16 +1,21 @@
 $(document).ready(function() {
 
-    $('#stripeButton').on('click', function(event) {
-        event.preventDefault();
-        var $button = $(this),
-            $form = $button.parents('form');
-        var opts = $.extend({}, $button.data(), {
-            token: function(result) {
-                $form.append($('<input>').attr({ type: 'hidden', name: 'stripeToken', value: result.id })).submit();
-            }
-        });
-        StripeCheckout.open(opts);
+    $(function(){
+        $('#homeForm').validate();
     });
+
+    // $('#stripeButton').on('click', function(event) {
+    //     event.preventDefault();
+    //     var $button = $(this),
+    //         $form = $button.parents('form');
+    //     var opts = $.extend({}, $button.data(), {
+    //         token: function(result) {
+    //             $form.append($('<input>').attr({ type: 'hidden', name: 'stripeToken', value: result.id })).submit();
+    //         }
+    //     });
+    //     StripeCheckout.open(opts);
+    // });
+    
     // body background-image
     var bodyPathImg = $('#selectTheme').attr('data-path-img');
     $('body').css('backgroundImage', 'url('+bodyPathImg+')');

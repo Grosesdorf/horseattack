@@ -5,6 +5,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Bootstrap -->
@@ -49,8 +52,20 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 col-md-offset-3">
+                            @include('common.errors')       
+                            @if (\Session::has('success'))
+                                <div class="alert alert-success">
+                                    <ul>
+                                        <li>{!! \Session::get('success') !!}</li>
+                                    </ul>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-md-offset-3">
                             <div class="payment">
-                                <form action="" method="post">  
+                                <form id="homeForm" action="sendmessage" method="post">  
                                     <div class="form-group">
                                         <label for ="ThemeId">Theme</label>
                                         <select id="selectTheme" class="form-control" name="ThemeId" data-path-img="{{ $pathImg }}">
@@ -68,14 +83,9 @@
                                         </select>
                                     </div>                      
                                     <div class="form-group">
-                                        <input class="form-control" type="phone" name="UserPhone"placeholder="Phone Number (5554447788)" required="" />
+                                        <input class="form-control" type="phone" name="UserPhone"placeholder="Phone Number (5554447788)" required />
                                     </div>
                                     <div class="form-group">
-                                        <!-- <select id="selectPlan" class="form-control" name="PlanId">
-                                            <option value="1">Basic Attack - 6 messages, $0.89</option>
-                                            <option selected="selected" value="2">Barrage Attack - 13 messages, $1.39</option>
-                                            <option value="3">Death By Herd - 30 messages, $2.99</option>
-                                        </select> -->
                                         <select id="selectPlan" class="form-control" name="PlanId">
                                             @forelse($attackPlans as $attackPlan)
                                                 <option 
@@ -91,7 +101,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <input class="form-control" type="text" name="UserName" placeholder="Your Name*" required="" />
+                                        <input class="form-control" type="text" name="UserName" placeholder="Your Name*" required />
                                     </div>
                                     <div class = "form-group">
                                         <label for ="TextMessage">Message</label>
@@ -112,6 +122,7 @@
                                             <button class="btn  btn-primary" name="Submit" value="PayPal" type="submit">Pay by PayPal</button>
                                         </div>
                                     </div>
+                                    <input type="hidden" name="_token" value="{{csrf_token()}}"/>
                                 </form>
                             </div>
                         </div>
@@ -129,7 +140,7 @@
                                 </ul>
                             </div>
                             <div class="col-md-2">
-                                <p>&copy; 2016-2017  Goat Attack</p>
+                                <p>&copy; 2017 Horse of Math</p>
                             </div>
                             <div class="col-md-2">
                                 <ul class="list-inline">
@@ -145,7 +156,8 @@
                     
                
         
-            <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="/js/jquery.validate.min.js"></script>
     <script src="https://checkout.stripe.com/checkout.js"></script>
     <script src="/js/bootstrap.js"></script>
     <script src="/js/main.js"></script>
