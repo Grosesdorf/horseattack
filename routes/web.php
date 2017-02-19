@@ -13,17 +13,17 @@
 
 Route::get('/', 'HomeController@index');
 
-Route::post('/sendmessage', 'SendMessageController@index');
+// Route::get('/paypal', 'PayPalController@index');
+// Route::post('/paypal', 'PayPalController@valid');
 
-// Route::post('/sendmessage', array('before' => 'csrf', function () {
-// 				  $rules = array(
-// 				    'UserPhone' => array('required', 'text'),
-// 				    'UserName' => array('required', 'text')
-// 				  );
-// 				}
-// ));
+Route::post('/stripe', 'StripeController@valid');
+// Route::post('/stripe', 'StripeController@index');
+Route::get('/stripe', 'StripeController@index');
 
 Route::get('showplan/{id}', 'HomeController@showPlan');
+
+Route::post('/sendmessage', 'SendMessageController@index');
+Route::post('/showplan/sendmessage', 'SendMessageController@index');
 
 Auth::routes();
 

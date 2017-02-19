@@ -11,4 +11,9 @@ class Theme extends Model
 	*/
 	protected $table = 'themes';
 	public $timestamps = false;
+
+	public function plans()
+    {
+        return $this->hasMany('App\AttackPlan');
+    }
 }
