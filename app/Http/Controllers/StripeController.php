@@ -36,16 +36,15 @@ class StripeController extends Controller{
       $textMsg = (null !== ($request->input("textMsg"))) ? $request->input("textMsg") : '';
       $emailUser = (null !== ($request->input("emailUser"))) ? $request->input("emailUser") : 'No Email';
 
-      // \Stripe\Stripe::setApiKey($_ENV['STRIPE_SECRET']);
-      // $charge = \Stripe\Charge::create(array(
-      //     'amount' => $value, // Amount in cents!
-      //     'currency' => 'usd',
-      //     'source' => $stripeToken,
-      //     'description' => $emailUser
-      // ));
+      \Stripe\Stripe::setApiKey($_ENV['STRIPE_SECRET']);
+      $charge = \Stripe\Charge::create(array(
+          'amount' => $value, // Amount in cents!
+          'currency' => 'usd',
+          'source' => $stripeToken,
+          'description' => $emailUser
+      ));
 
-      // if($charge->paid == true){
-      if(true){
+      if($charge->paid == true){
         $countMsg = AttackPlan::where('id', $idPlan)->value("count_msg");
         $arrRand = [];
         $parameters = [];

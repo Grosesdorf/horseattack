@@ -92,13 +92,7 @@ class SendMessageController extends Controller
           $arrTwilio
       );
 
-      // echo "<pre>";
-      // var_dump($arrTwilio);
-      // echo "</pre>";
-
-      // return redirect('');
-        // return redirect()->back()->with('success', 'Cheers! Your message has been sent!');
-        return redirect()->with('success', 'Cheers! Your message has been sent!');
+      return redirect('/')->with('success', 'Cheers! Your message has been sent!');
 
     }
 }
