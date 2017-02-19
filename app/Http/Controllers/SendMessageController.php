@@ -39,52 +39,81 @@ class SendMessageController extends Controller
                       ->withInput();
       }
 
-      // dd($request->input("UserPhone"));
-
       $toPhone = $request->input("UserPhone");
       $fromUser = $request->input("UserName");
       $idTheme = $request->input("ThemeId");
       $idPlan = $request->input("PlanId");
+      $textMsg = $request->input("TextMessage");
       $submit = $request->input("Submit");
 
       $parameters = ['toPhone' => $toPhone, 
                      'fromUser' => $fromUser,
                      'idTheme' => $idTheme,
-                     'idPlan' => $idPlan
+                     'idPlan' => $idPlan,
+                     'textMsg' => $textMsg
                      ];
 
       if($submit == "stripe"){
         return redirect()->action('StripeController@valid', $parameters);
       }
       elseif ($submit === "paypal") {
-        return redirect('/paypal')->with($parameters);
+        return redirect()->action('PayPalController@valid', $parameters);
       }
       else{
         return redirect('/');
       }
+    }
+
+    public function send(Request $request){
+
+      // dd($request->all());
+      $arrTwilio = [];
+
+      $toPhone = '+38'.$request->input("toPhone");
+      $fromUser = $request->input("fromUser");
+      $textMsg = $request->input("textMsg");
+      $urlImage = $request->input("urlImage");
+
+      $tssid = $_ENV['TWILIO_TEST_ACCOUNT_SID'];
+      $tstoken = $_ENV['TWILIO_TEST_AUTHTOKEN'];
+      $from = $_ENV['TWILIO_FROM'];
+      $fromMagic = $_ENV['TWILIO_FROM_MAGIC'];
+
+      $arrTwilio = ['from' => $from,
+                    'body' => 'From: '.$fromUser. " " .$textMsg,
+                    'mediaUrl' => $urlImage
+                    ];
+
+      // for ($i = 1; $i <= count($urlImage); $i++) {
+      //   $arrTwilio += ['mediaUrl'.$i => $urlImage[$i-1]];
+      // }
+
+      // $arrTwilio += ['mediaUrl' => $urlImage];
+              
+
+      $sms = new Client($tssid, $tstoken);
+      // Use the client to do fun stuff like send text messages!
+      $sms->messages->create(
+          // the number you'd like to send the message to
+          $toPhone,
+          $arrTwilio
+          // array(
+          //     'from' => $from,
+          //     'body' => "From Pavel",
+          //     'mediaUrl' => ['https://s3-us-west-2.amazonaws.com/bucket-attack/horses/sheet2square2.jpeg',
+          //                    'https://s3-us-west-2.amazonaws.com/bucket-attack/horses/sheet2square3.jpeg' 
+          //                   ] 
+          // )
+      );
+
       
-      // echo $toPhone;
-      // echo $fromUser;
-      // echo $submit;
+      echo "<pre>";
+      var_dump($arrTwilio);
+      echo "</pre>";
 
-            // $sid = 'AC94354d1239740b5784d063c89eece3e5';
-            // $token = '6b5232b6b42ecf3def3a82da6ee0e049';
-            // $client = new Client($sid, $token);
-
-            // // Use the client to do fun stuff like send text messages!
-            // $client->messages->create(
-            //     // the number you'd like to send the message to
-            //     '+15862329830',
-            //     array(
-            //         'from' => '+16267738639',
-            //         'body' => 'Hey Vladimir! Good luck!',
-            //         // 'mediaUrl' => $_SERVER["DOCUMENT_ROOT"].'/public/img/horses/sheet_2_square.023.jpeg'
-            //         'mediaUrl' => 'http://cs413818.vk.me/v413818702/e55/ZwnuBlZZJbU.jpg'
-            //     )
-            // );
-        
-        // return redirect('');
+      // return redirect('');
         // return redirect()->back()->with('success', 'Cheers! Your message has been sent!');
         // return redirect()->with('success', 'Cheers! Your message has been sent!');
+
     }
 }

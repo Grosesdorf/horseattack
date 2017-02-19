@@ -13,16 +13,16 @@
 
 Route::get('/', 'HomeController@index');
 
-// Route::get('/paypal', 'PayPalController@index');
-// Route::post('/paypal', 'PayPalController@valid');
+Route::post('/paypal', 'PayPalController@valid');
+Route::get('/paypal', 'PayPalController@index');
 
 Route::post('/stripe', 'StripeController@valid');
-// Route::post('/stripe', 'StripeController@index');
 Route::get('/stripe', 'StripeController@index');
 
 Route::get('showplan/{id}', 'HomeController@showPlan');
 
 Route::post('/sendmessage', 'SendMessageController@index');
+Route::get('/sendmessage', 'SendMessageController@send');
 Route::post('/showplan/sendmessage', 'SendMessageController@index');
 
 Auth::routes();

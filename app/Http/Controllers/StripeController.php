@@ -33,6 +33,7 @@ class StripeController extends Controller{
       $fromUser = $request->input("fromUser");
       $idTheme = $request->input("idTheme");
       $idPlan = $request->input("idPlan");
+      $textMsg = (null !== ($request->input("textMsg"))) ? $request->input("textMsg") : '';
       $emailUser = (null !== ($request->input("emailUser"))) ? $request->input("emailUser") : 'No Email';
 
       // \Stripe\Stripe::setApiKey($_ENV['STRIPE_SECRET']);
@@ -46,47 +47,32 @@ class StripeController extends Controller{
       // if($charge->paid == true){
       if(true){
         $countMsg = AttackPlan::where('id', $idPlan)->value("count_msg");
-        $arr = [];
+        $arrRand = [];
+        $parameters = [];
+        $urlImage = [];
         while(true) { 
-          if(count($arr) == $countMsg){
+          if(count($arrRand) == $countMsg){
             break;
           }
           else{
             $i = rand(1, 23);
-            if(!in_array($i, $arr)){
-              $arr[] += $i;  
+            if(!in_array($i, $arrRand)){
+              $arrRand[] += $i;  
             }
           }
         }
-        
-        foreach ($arr as $value) {
-          echo "https://s3-us-west-2.amazonaws.com/bucket-attack/horses/sheet2square".$value.".jpeg <br/>";
-        }
 
+        foreach ($arrRand as $value) {
+          $urlImage[] = "https://s3-us-west-2.amazonaws.com/bucket-attack/horses/sheet2square".$value.".jpeg";
+        }
+        
         $parameters = ['toPhone' => $toPhone, 
                      'fromUser' => $fromUser,
-                     'idTheme' => $idTheme,
-                     'idPlan' => $idPlan
+                     'textMsg' => $textMsg,
+                     'urlImage' => $urlImage
                      ];
 
-
-        return redirect()->action('StripeController@valid', $parameters);
-        // echo "<pre>";
-        // var_dump($arr);
-        // echo "</pre>";
-        echo $countMsg . "<br />";
-        // echo $q["count_msg"] . "<br />";
-        echo $idPlan . "<br />";
-        echo $cardNumber . "<br />";
-        echo $value . "<br />";
-        echo $emailUser . "<br />";
-        echo $toPhone . "<br />";
-      }
-
-      // 
-
-      // return redirect('');
-      // return redirect()->back()->with('success', 'Cheers! Your message has been sent!');
-      // return redirect()->with('success', 'Cheers! Your message has been sent!');
+        return redirect()->action('SendMessageController@send', $parameters);
     }
+  }
 }
