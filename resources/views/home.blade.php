@@ -20,6 +20,13 @@
                         </ul>
                     </div>
                 @endif
+                @if (\Session::has('error'))
+                    <div class="alert alert-info">
+                        <ul>
+                            <li>{!! \Session::get('error') !!}</li>
+                        </ul>
+                    </div>
+                @endif
             </div>
         </div>
         <div class="row">
@@ -73,7 +80,7 @@
                             </div>
                             <div class="col-md-3">
                                 <button class="btn  btn-primary" name="Submit" value="paypal" type="submit">Pay by PayPal</button>
-                            </div>
+                            </div> 
                         </div>
                         <input type="hidden" name="_token" value="{{csrf_token()}}"/>
                     </form>

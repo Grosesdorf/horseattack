@@ -15,12 +15,23 @@ class StripeController extends Controller{
      */
     public function index(Request $request){
 
-      $idTheme = $request->input("idTheme");
-      $idPlan = $request->input("idPlan");
+      // dd($request);
+      $reqParam = $request->all();
 
-      $value = Theme::find($idTheme)->plans()->where('id', '=', $idPlan)->value('value');
+      if(!empty($reqParam)){
+        $idTheme = $request->input("idTheme");
+        $idPlan = $request->input("idPlan");
 
-      return view('stripe', ["value" => $value]);
+        $value = Theme::find($idTheme)->plans()->where('id', '=', $idPlan)->value('value');
+
+        return view('stripe', ["value" => $value]);  
+      }
+      else{
+        // return redirect('/');
+        return redirect('/')->with('error', 'Try again.');
+      }
+
+      
 
     }
 

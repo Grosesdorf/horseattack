@@ -40,8 +40,11 @@
         @yield('content')
   
     <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <!-- <script src="https://checkout.stripe.com/checkout.js"></script> -->
     <script src="https://js.stripe.com/v2/"></script>
+    <!-- <script src="https://js.braintreegateway.com/web/3.8.0/js/client.min.js"></script>
+    <script src="https://js.braintreegateway.com/web/3.8.0/js/paypal.min.js"></script> -->
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+    <!-- <script src="//www.paypalobjects.com/api/checkout.js" async></script> -->
     <script src="/js/bootstrap.js"></script>
     <script src="/js/main.js"></script>
     </body>

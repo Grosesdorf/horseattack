@@ -56,11 +56,12 @@ class SendMessageController extends Controller
       if($submit == "stripe"){
         return redirect()->action('StripeController@valid', $parameters);
       }
-      elseif ($submit === "paypal") {
-        return redirect()->action('PayPalController@valid', $parameters);
+      elseif ($submit === "paypal"){
+        return redirect()->action('PayPalController@index', $parameters);
       }
       else{
-        return redirect('/');
+        // return redirect('/');
+        return redirect('/')->with('error', 'Try again.');
       }
     }
 

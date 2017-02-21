@@ -13,8 +13,10 @@
 
 Route::get('/', 'HomeController@index');
 
-Route::post('/paypal', 'PayPalController@valid');
 Route::get('/paypal', 'PayPalController@index');
+Route::get('/paypal/valid', 'PayPalController@validPayment');
+Route::get('/paypal/error', 'PayPalController@errorPayment');
+Route::get('/paypal/cancel', 'PayPalController@cancelPayment');
 
 Route::post('/stripe', 'StripeController@valid');
 Route::get('/stripe', 'StripeController@index');
