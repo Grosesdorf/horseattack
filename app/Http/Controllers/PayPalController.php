@@ -39,14 +39,15 @@ class PayPalController extends Controller{
 
         $apiContext = new ApiContext(
                                     new OAuthTokenCredential(
-                                        'Ad4ywMc-cKU0q36X5StLt8V77RJzphe0uyQ12XBj4Vtg17kMp2T0BDD4QZy3h06-49RuhEdrGF-f-ctG',     // ClientID
-                                        'EB4tgI_Mp9b0y9Ip9DtEBeO4QuFr6CLqXg1ElNHNMN0eoTJJPvvRWLfXCzSeGP9nw-s5kZHIyNykNugz'      // ClientSecret
+                                        $_ENV['PAY_ID'],     // ClientID
+                                        $_ENV['PAY_SECRET']      // ClientSecret
                                     )
         );
 
         $apiContext->setConfig(
           array(
-            'mode' => 'sandbox',
+            // 'mode' => 'sandbox',
+            'mode' => 'live',
             'http.connectionTimeOut' => 30,
             'log.LogEnabled' => false,
             'log.FileName' => '',
@@ -94,9 +95,10 @@ class PayPalController extends Controller{
         } 
         catch(PPConectionException $ex){
           
-          $msg = 'Code: '.$ex->getCode();
-          $msg += ' Data: '.$ex->getData();
-          return redirect('/')->with('error', $msg);
+          dd("index ", $ex->getCode(), $ex->getData());
+          // $msg = 'Code: '.$ex->getCode();
+          // $msg += ' Data: '.$ex->getData();
+          // return redirect('/')->with('error', $msg);
         } 
         catch (Exception $ex) {
           return redirect('/')->with('error', 'PayPal: Something went wrong. Try again.');
@@ -113,14 +115,14 @@ class PayPalController extends Controller{
 
       $apiContext = new ApiContext(
                                     new OAuthTokenCredential(
-                                        'Ad4ywMc-cKU0q36X5StLt8V77RJzphe0uyQ12XBj4Vtg17kMp2T0BDD4QZy3h06-49RuhEdrGF-f-ctG',     // ClientID
-                                        'EB4tgI_Mp9b0y9Ip9DtEBeO4QuFr6CLqXg1ElNHNMN0eoTJJPvvRWLfXCzSeGP9nw-s5kZHIyNykNugz'      // ClientSecret
+                                        $_ENV['PAY_ID'],     // ClientID
+                                        $_ENV['PAY_SECRET']      // ClientSecret
                                     )
       );
 
       $apiContext->setConfig(
         array(
-          'mode' => 'sandbox',
+          'mode' => 'live',
           'http.connectionTimeOut' => 30,
           'log.LogEnabled' => false,
           'log.FileName' => '',
@@ -129,7 +131,7 @@ class PayPalController extends Controller{
         )
       );
 
-      $paymentId = $_GET['paymentId'];
+         $paymentId = $_GET['paymentId'];
         $payment = Payment::get($paymentId, $apiContext);
         $payerId = $_GET['PayerID'];
 
@@ -143,7 +145,7 @@ class PayPalController extends Controller{
           dd($result);
         } 
         catch (PayPalConnectionException $ex) {
-          
+          dd('valid ', $ex->getCode(), $ex->getData());
           $msg = 'Code: '.$ex->getCode();
           $msg += ' Data: '.$ex->getData();
           return redirect('/')->with('error', $msg);

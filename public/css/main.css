@@ -1,3 +1,11 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700');
+
+* {
+    // font-family: "Roboto Condensed", Arial, sans-serif;
+    font-family: 'Roboto Condensed';
+    // font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+}
 body {   
 	// background-image: url(/img/bg_tr.jpg);      
 	background-position: center center;      
@@ -7,7 +15,7 @@ body {
     background-color: white; 
 	// background-color: #4dc8f2; 
 	// color: #636b6f;
-    // font-family: 'Raleway', sans-serif;
+    
     font-weight: 100;
     height: 100vh;
     margin: 0;
@@ -17,6 +25,33 @@ th, td{
 }
 textarea {
     resize: none;
+}
+p {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+#selectTheme {
+    display: none;
+}
+#selectPlan {
+    font-size: 17px;
+}
+.footer-info {
+    margin: 80px auto;
+}
+.side-right {   
+    background-image: url(/img/back_horse.png);      
+    background-position: center center;      
+    background-repeat: no-repeat;      
+    // background-attachment: fixed;      
+    background-size: cover;      
+    background-color: white; 
+    // background-color: #4dc8f2; 
+    // color: #636b6f;
+    // font-family: 'Raleway', sans-serif;
+    font-weight: 100;
+    height: 100vh;
+    margin: 0;
 }
 .full-height {
     height: 10vh;
@@ -47,7 +82,7 @@ textarea {
 }
 
 .links > a {
-    color: #636b6f;
+    // color: #636b6f;
     padding: 0 25px;
     font-size: 12px;
     font-weight: 600;
@@ -64,20 +99,22 @@ textarea {
     margin-top: 50px;
 }
 .tagline {
-    color: #fff;
-    font-style: italic;
+    // color: #fff;
+    font-size: 16px;
+    
+    
 }
 .payment {
     background: #fff;
-    padding: 20px 15px;
+    padding: 5px 15px;
     border-radius: 7px;
-    box-shadow: 3px 3px 5px rgba(25,25,25,.2);
+    // box-shadow: 3px 3px 5px rgba(25,25,25,.2);
 }
 .main-footer {
 	margin-top: 20px;
-	color: white;
+	// color: white;
 }
 
 .main-footer a {
-	color: white;
+	color: black;
 }

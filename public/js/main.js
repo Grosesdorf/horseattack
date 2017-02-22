@@ -8,7 +8,7 @@ function reportError(msg) {
 
 $(document).ready(function() {
 
-     Stripe.setPublishableKey('pk_test_t9LfL4nE4hH7owXEbgO2u4CJ');
+     Stripe.setPublishableKey('pk_live_rsPunoTSjI9FfHAEZjKqsPES');
 
     // STRIPE
     // Watch for a form submission:
@@ -77,64 +77,6 @@ $(document).ready(function() {
             return parseFloat($("select#selectPlan").val()) * 100;
         });
     });
-
-    //PayPal
-    // window.paypalCheckoutReady = function () {
-    //  paypal.checkout.setup('grosesdorf-facilitator_api1.gmail.com', {
-    //      container: 'myContainer', //{String|HTMLElement|Array} where you want the PayPal button to reside
-    //      environment: 'sandbox' //or 'production' depending on your environment
-    //  });
-    // };
-
-    // paypal.Button.render({
-    
-    //     // env: 'production', // Specify 'sandbox' for the test environment
-    //     env: 'sandbox', // Specify 'sandbox' for the test environment
-
-    //     style: {
-    //         size: 'medium',
-    //         color: 'blue',
-    //         shape: 'rect'
-    //     },
-
-    //     // commit: true, // Optional: show a 'Pay Now' button in the checkout flow
-
-    //     client: {
-    //         sandbox:    'grosesdorf-facilitator_api1.gmail.com',
-    //         // production: 'xxxxxxxxx'
-    //     },
-
-    //     payment: function(resolve, reject) {
-               
-    //         // var CREATE_PAYMENT_URL = 'https://my-store.com/paypal/create-payment';
-    //         var CREATE_PAYMENT_URL = 'http://someattack.local/paypal';
-                
-    //         paypal.request.post(CREATE_PAYMENT_URL)
-    //             .then(function(data) { resolve(data.paymentID); })
-    //             .catch(function(err) { reject(err); });
-    //     },
-
-    //     onAuthorize: function(data) {
-        
-    //         // Note: you can display a confirmation page before executing
-            
-    //         var EXECUTE_PAYMENT_URL = 'http://someattack.local/paypal';
-
-    //         paypal.request.post(EXECUTE_PAYMENT_URL,
-    //                 { paymentID: data.paymentID, payerID: data.payerID })
-                    
-    //             .then(function(data) { /* Go to a success page */ })
-    //             .catch(function(err) { /* Go to an error page  */ });
-    //     },
-
-    //     onCancel: function(data, actions) {
-    //         // Show a cancel page or return to cart
-    //         return actions.redirect();
-    //     },
-            
-    // }, '#paypal-button');
-
-
 });
 
 function stripeResponseHandler(status, response) {
