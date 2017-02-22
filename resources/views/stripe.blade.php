@@ -6,7 +6,7 @@
             <div id="paymentErrors"></div>
         </div>
     </div>
-    <div class="row">
+    <div class="row form-stripe">
         <div class="col-md-4 col-md-offset-4">
             <form id="stripeForm" class="form" action="" method="post">
                 <div class="form-group">
