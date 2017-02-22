@@ -70,7 +70,7 @@ class SendMessageController extends Controller
       // dd($request->all());
       $arrTwilio = [];
 
-      $toPhone = '+38'.$request->input("toPhone");
+      $toPhone = '+1'.$request->input("toPhone");
       // $toPhone = '+1'.$request->input("toPhone");
       $fromUser = $request->input("fromUser");
       $textMsg = $request->input("textMsg");
