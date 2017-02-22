@@ -64,6 +64,10 @@ class StripeController extends Controller{
           if(count($arrRand) == $countMsg){
             break;
           }
+          elseif ($countMsg == 24) {
+              $arrRand = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
+              break;
+          }
           else{
             $i = rand(1, 23);
             if(!in_array($i, $arrRand)){

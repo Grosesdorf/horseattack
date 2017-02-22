@@ -70,7 +70,8 @@ class SendMessageController extends Controller
       // dd($request->all());
       $arrTwilio = [];
 
-      $toPhone = '+1'.$request->input("toPhone");
+      $toPhone = '+38'.$request->input("toPhone");
+      // $toPhone = '+1'.$request->input("toPhone");
       $fromUser = $request->input("fromUser");
       $textMsg = $request->input("textMsg");
       $urlImage = $request->input("urlImage");
@@ -78,22 +79,70 @@ class SendMessageController extends Controller
       $tssid = $_ENV['TWILIO_TEST_ACCOUNT_SID'];
       $tstoken = $_ENV['TWILIO_TEST_AUTHTOKEN'];
       $from = $_ENV['TWILIO_FROM'];
-      $fromMagic = $_ENV['TWILIO_FROM_MAGIC'];
 
       $arrTwilio = ['from' => $from,
-                    'body' => 'From: '.$fromUser. " " .$textMsg,
+                    'body' => 'Horses of Math Attack from '.$fromUser. ". " .$textMsg,
                     'mediaUrl' => $urlImage
                     ];
 
       $sms = new Client($tssid, $tstoken);
-      // Use the client to do fun stuff like send text messages!
-      $sms->messages->create(
+
+      $flag = false;
+      
+      while(true){
+        $tmpUrlImage = [];
+        // dd($urlImage);
+        if(!empty($urlImage) && ($flag === false)){
+          for($i = 0; $i < 3; $i++){
+            $tmpUrlImage[] = array_shift($urlImage);
+          }
+          // dd("1 ", $urlImage, $tmpUrlImage);
+          $flag = true;
+          $arrTwilio = ['from' => $from,
+                    'body' => 'Horses of Math Attack from '.$fromUser. ". " .$textMsg,
+                    'mediaUrl' => $tmpUrlImage
+                    ];
+          $sms->messages->create(
           // the number you'd like to send the message to
           $toPhone,
           $arrTwilio
-      );
-
+          );  
+          continue;
+        }
+        elseif(!empty($urlImage) && $flag == true){
+          for($i = 0; $i < 3; $i++){
+            $tmpUrlImage[] = array_shift($urlImage);
+          }
+          // dd("2 ", $urlImage, $tmpUrlImage);
+          $arrTwilio = ['from' => $from,
+                    'body' => 'Horses of Math Attack from '.$fromUser.".",
+                    'mediaUrl' => $tmpUrlImage
+                    ];
+          $sms->messages->create(
+          // the number you'd like to send the message to
+          $toPhone,
+          $arrTwilio
+          );
+          continue;
+        }
+        else{
+          break;
+        }              
+      
       return redirect('/')->with('success', 'Cheers! Your message has been sent!');
 
+      // dd($toPhone, $arrTwilio);
+
+      // $sms = new Client($tssid, $tstoken);
+      // // Use the client to do fun stuff like send text messages!
+      // $sms->messages->create(
+      //     // the number you'd like to send the message to
+      //     $toPhone,
+      //     $arrTwilio
+      // );
+
+      // return redirect('/')->with('success', 'Cheers! Your message has been sent!');
+
     }
+  }
 }
