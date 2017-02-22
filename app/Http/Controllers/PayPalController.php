@@ -51,8 +51,8 @@ class PayPalController extends Controller{
 
         $apiContext->setConfig(
           array(
-            'mode' => 'sandbox',
-            // 'mode' => 'live',
+            // 'mode' => 'sandbox',
+            'mode' => 'live',
             'http.connectionTimeOut' => 30,
             'log.LogEnabled' => false,
             'log.FileName' => '',
@@ -67,12 +67,12 @@ class PayPalController extends Controller{
 
         // Set redirect urls
         $redirectUrls = new RedirectUrls();
-        $redirectUrls->setReturnUrl('http://someattack.local/paypal/valid?ph='.urlencode($ph).
+        $redirectUrls->setReturnUrl('http://www.fockie.com/paypal/valid?ph='.urlencode($ph).
                                                                           '&pl='.urlencode($pl).     //  http://www.fockie.com/paypal/valid
                                                                           '&th='.urlencode($th).     //  http://www.fockie.com/paypal/valid
                                                                           '&us='.urlencode($us).     //  http://www.fockie.com/paypal/valid
                                                                           '&ms='.urlencode($ms))     //  http://www.fockie.com/paypal/valid
-                     ->setCancelUrl('http://someattack.local/paypal/cancel');   //  http://www.fockie.com/paypal/cancel
+                     ->setCancelUrl('http://www.fockie.com/paypal/cancel');   //  http://www.fockie.com/paypal/cancel
 
         // Set payment amount
         $amount = new Amount();
@@ -133,8 +133,8 @@ class PayPalController extends Controller{
 
       $apiContext->setConfig(
         array(
-          'mode' => 'sandbox',
-          // 'mode' => 'live',
+          // 'mode' => 'sandbox',
+          'mode' => 'live',
           'http.connectionTimeOut' => 30,
           'log.LogEnabled' => false,
           'log.FileName' => '',
