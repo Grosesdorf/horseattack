@@ -121,7 +121,20 @@ class SendMessageController extends Controller{
       }
 
       $arrRand = [];
-      $countSigns = (int)$countMsg / 3;
+      // $countSigns = (int)$countMsg / 3;
+
+      // while(true) { 
+      //   if(count($arrRand) == $countSigns){
+      //     break;
+      //   }
+      //   else{
+      //     $i = rand(1, 18);
+      //     if(!in_array($i, $arrRand)){
+      //       $arrRand[] += $i;  
+      //     }
+      //   }
+      // }
+      $countSigns = (int)$countMsg;
 
       while(true) { 
         if(count($arrRand) == $countSigns){
@@ -142,52 +155,86 @@ class SendMessageController extends Controller{
       $sms = new Client($tssid, $tstoken);
 
       $flag = false;
-      
+
       while(true){
-        $tmpUrlImage = [];
-        if(!empty($urlImage) && ($flag == false)){
-          for($i = 0; $i < 3; $i++){
-            $tmpUrlImage[] = array_shift($urlImage);
-          }
-          $flag = true;
+        if($flag == false&&!empty($urlImage)){
           $arrTwilio = ['from' => $from,
                 'body' => 'Horses of Math Attack from '.$fromUser. ". " .$textMsg. " ".array_shift($arrSigns),
-                'mediaUrl' => $tmpUrlImage
-                       ];
+                'mediaUrl' => array_shift($urlImage)
+                ];
+          $flag = true;
           $sms->messages->create(
-          $toPhone,
-          $arrTwilio
+            $toPhone,
+            $arrTwilio
           );
-          sleep(2);
           // echo '<pre>';
           // var_dump($arrTwilio);
           // echo '</pre>';
-
-          continue;
         }
-        elseif(!empty($urlImage) && $flag == true){
-          for($i = 0; $i < 3; $i++){
-            $tmpUrlImage[] = array_shift($urlImage);
-          }
-          $arrTwilio = ['from' => $from,
-                    'body' => array_shift($arrSigns),
-                    'mediaUrl' => $tmpUrlImage
-                    ];
-          $sms->messages->create(
-          $toPhone,
-          $arrTwilio
-          );
+        elseif(!empty($urlImage)){
           sleep(1);
+          $arrTwilio = ['from' => $from,
+                'body' => array_shift($arrSigns),
+                'mediaUrl' => array_shift($urlImage)
+                ];
+          $sms->messages->create(
+            $toPhone,
+            $arrTwilio
+          );
           // echo '<pre>';
           // var_dump($arrTwilio);
           // echo '</pre>';
-
-          continue;
         }
         else{
           break;
-        }              
+        }
       }
+      
+      // while(true){
+      //   $tmpUrlImage = [];
+      //   if(!empty($urlImage) && ($flag == false)){
+      //     for($i = 0; $i < 3; $i++){
+      //       $tmpUrlImage[] = array_shift($urlImage);
+      //     }
+      //     $flag = true;
+      //     $arrTwilio = ['from' => $from,
+      //           'body' => 'Horses of Math Attack from '.$fromUser. ". " .$textMsg. " ".array_shift($arrSigns),
+      //           'mediaUrl' => $tmpUrlImage
+      //                  ];
+      //     $sms->messages->create(
+      //     $toPhone,
+      //     $arrTwilio
+      //     );
+      //     sleep(2);
+      //     // echo '<pre>';
+      //     // var_dump($arrTwilio);
+      //     // echo '</pre>';
+
+      //     continue;
+      //   }
+      //   elseif(!empty($urlImage) && $flag == true){
+      //     for($i = 0; $i < 3; $i++){
+      //       $tmpUrlImage[] = array_shift($urlImage);
+      //     }
+      //     $arrTwilio = ['from' => $from,
+      //               'body' => array_shift($arrSigns),
+      //               'mediaUrl' => $tmpUrlImage
+      //               ];
+      //     $sms->messages->create(
+      //     $toPhone,
+      //     $arrTwilio
+      //     );
+      //     sleep(1);
+      //     // echo '<pre>';
+      //     // var_dump($arrTwilio);
+      //     // echo '</pre>';
+
+      //     continue;
+      //   }
+      //   else{
+      //     break;
+      //   }              
+      // }
 
       return redirect('/')->with('success', 'Cheers! Your message has been sent!');
     }
