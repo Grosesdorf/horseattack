@@ -8,7 +8,10 @@ function reportError(msg) {
 
 $(document).ready(function() {
 
-     Stripe.setPublishableKey('pk_live_rsPunoTSjI9FfHAEZjKqsPES');
+    // $("#stripeModalBox").modal('show');
+    Stripe.setPublishableKey('pk_test_t9LfL4nE4hH7owXEbgO2u4CJ'); //sandbox
+    // Stripe.setPublishableKey('pk_live_rsPunoTSjI9FfHAEZjKqsPES'); //live
+
 
     // STRIPE
     // Watch for a form submission:

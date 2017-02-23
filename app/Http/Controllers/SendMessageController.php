@@ -60,18 +60,16 @@ class SendMessageController extends Controller
         return redirect()->action('PayPalController@index', $parameters);
       }
       else{
-        // return redirect('/');
         return redirect('/')->with('error', 'Try again.');
       }
     }
 
     public function send(Request $request){
 
-      // dd($request->all());
+      dd($request->all());
       $arrTwilio = [];
 
-      $toPhone = '+1'.$request->input("toPhone");
-      // $toPhone = '+1'.$request->input("toPhone");
+      $toPhone = (substr($request->input("toPhone"), 0, 2) === '095') ? '+38'.$request->input("toPhone") : '+1'.$request->input("toPhone");
       $fromUser = $request->input("fromUser");
       $textMsg = $request->input("textMsg");
       $urlImage = $request->input("urlImage");

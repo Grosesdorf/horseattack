@@ -28,6 +28,17 @@ class PayPalController extends Controller{
      */
     public function index(Request $request){
 
+      if($_ENV['MODE_PAY'] == "sandbox"){
+        $modePay = 'sandbox';
+        $payId = $_ENV['TEST_PAY_ID'];
+        $paySecret = $_ENV['TEST_PAY_SECRET'];
+      }
+      elseif ($_ENV['MODE_PAY'] == "live") {
+        $modePay = 'live';
+        $payId = $_ENV['PAY_ID'];
+        $paySecret = $_ENV['PAY_SECRET'];
+      }
+
       $reqParam = $request->all();
 
       // dd($request->all());
@@ -44,15 +55,14 @@ class PayPalController extends Controller{
 
         $apiContext = new ApiContext(
                                     new OAuthTokenCredential(
-                                        $_ENV['PAY_ID'],          // ClientID
-                                        $_ENV['PAY_SECRET']       // ClientSecret
+                                        $payId,          // ClientID
+                                        $paySecret       // ClientSecret
                                     )
         );
 
         $apiContext->setConfig(
           array(
-            // 'mode' => 'sandbox',
-            'mode' => 'live',
+            'mode' => $modePay,
             'http.connectionTimeOut' => 30,
             'log.LogEnabled' => false,
             'log.FileName' => '',
@@ -67,12 +77,21 @@ class PayPalController extends Controller{
 
         // Set redirect urls
         $redirectUrls = new RedirectUrls();
-        $redirectUrls->setReturnUrl('http://www.fockie.com/paypal/valid?ph='.urlencode($ph).
-                                                                          '&pl='.urlencode($pl).     //  http://www.fockie.com/paypal/valid
-                                                                          '&th='.urlencode($th).     //  http://www.fockie.com/paypal/valid
-                                                                          '&us='.urlencode($us).     //  http://www.fockie.com/paypal/valid
-                                                                          '&ms='.urlencode($ms))     //  http://www.fockie.com/paypal/valid
-                     ->setCancelUrl('http://www.fockie.com/paypal/cancel');   //  http://www.fockie.com/paypal/cancel
+        $redirectUrls->setReturnUrl('http://someattack.local/paypal/valid?ph='.urlencode($ph).
+                                                                          '&pl='.urlencode($pl).   
+                                                                          '&th='.urlencode($th).   
+                                                                          '&us='.urlencode($us).  
+                                                                          '&ms='.urlencode($ms)) 
+                     ->setCancelUrl('http://someattack.local/paypal/cancel');
+
+        // $redirectUrls->setReturnUrl('http://www.fockie.com/paypal/valid?ph='.urlencode($ph).
+        //                                                                   '&pl='.urlencode($pl).   
+        //                                                                   '&th='.urlencode($th).   
+        //                                                                   '&us='.urlencode($us).  
+        //                                                                   '&ms='.urlencode($ms)) 
+        //              ->setCancelUrl('http://www.fockie.com/paypal/cancel');
+
+
 
         // Set payment amount
         $amount = new Amount();
@@ -122,19 +141,27 @@ class PayPalController extends Controller{
 
     public function validPayment(Request $request){
 
-      // var_dump($request);
+      if($_ENV['MODE_PAY'] == "sandbox"){
+        $modePay = 'sandbox';
+        $payId = $_ENV['TEST_PAY_ID'];
+        $paySecret = $_ENV['TEST_PAY_SECRET'];
+      }
+      elseif ($_ENV['MODE_PAY'] == "live") {
+        $modePay = 'live';
+        $payId = $_ENV['PAY_ID'];
+        $paySecret = $_ENV['PAY_SECRET'];
+      }
 
       $apiContext = new ApiContext(
                                     new OAuthTokenCredential(
-                                        $_ENV['PAY_ID'],     // ClientID
-                                        $_ENV['PAY_SECRET']      // ClientSecret
+                                        $payId,     // ClientID
+                                        $paySecret      // ClientSecret
                                     )
       );
 
       $apiContext->setConfig(
         array(
-          // 'mode' => 'sandbox',
-          'mode' => 'live',
+          'mode' => $modePay,
           'http.connectionTimeOut' => 30,
           'log.LogEnabled' => false,
           'log.FileName' => '',
@@ -155,36 +182,20 @@ class PayPalController extends Controller{
           // Execute payment
           $result = $payment->execute($execution, $apiContext);
 
-          // dd($_GET['ph']);
-          $countMsg = AttackPlan::where('id', $_GET['pl'])->value("count_msg");
-          $arrRand = [];
-          $parameters = [];
-          $urlImage = [];
-          while(true) { 
-            if(count($arrRand) == $countMsg){
-              break;
-            }
-            elseif ($countMsg == 24) {
-              $arrRand = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
-              break;
-            }
-            else{
-              $i = rand(1, 24);
-              if(!in_array($i, $arrRand)){
-                $arrRand[] += $i;  
-              }
-            }
-          }
-
-          foreach ($arrRand as $value) {
-            $urlImage[] = "https://s3-us-west-2.amazonaws.com/bucket-attack/horses/sheet2square".$value.".jpeg";
-          }
-
-          $parameters = ['toPhone' => $_GET['ph'], 
-                     'fromUser' => $_GET['us'],
-                     'textMsg' => $_GET['ms'],
-                     'urlImage' => $urlImage
-                     ];
+          dd(get_object_vars($result));
+          echo "<pre>";
+          var_dump(get_object_vars($result));
+          echo "</pre>";
+ 
+          $parameters = ['system' => "paypal",
+                         'toPhone' => $request->input('ph'), 
+                         'fromUser' => $request->input('us'), 
+                         'textMsg' => $request->input("ms"),
+                         'emailUser' => $result[transactions][transaction][payee][email],
+                         'value' => floatval($result[transactions][transaction][amount][total])*100,
+                         'idTheme' => $request->input('th'),
+                         'idPlan' => $request->input('pl')
+                        ];
 
         return redirect()->action('SendMessageController@send', $parameters);
 
@@ -201,15 +212,11 @@ class PayPalController extends Controller{
     }
 
     public function cancelPayment(Request $request){
-
-      // dd("PayPal cancel!!! You cancelled.");
       // "You cancelled."
       return redirect('/')->with('error', 'You cancelled.');
     }
 
     public function errorPayment(Request $request){
-
-      // dd("PayPal error!!! Something went wrong.");
       // "Something went wrong."
       return redirect('/')->with('error', 'PayPal: Something went wrong.');
     }
