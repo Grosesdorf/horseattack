@@ -181,18 +181,14 @@ class PayPalController extends Controller{
         try {
           // Execute payment
           $result = $payment->execute($execution, $apiContext);
-
-          dd(get_object_vars($result));
-          echo "<pre>";
-          var_dump(get_object_vars($result));
-          echo "</pre>";
- 
+          $transaction = $result->toArray();
+          // dd($transaction);
           $parameters = ['system' => "paypal",
                          'toPhone' => $request->input('ph'), 
                          'fromUser' => $request->input('us'), 
                          'textMsg' => $request->input("ms"),
-                         'emailUser' => $result[transactions][transaction][payee][email],
-                         'value' => floatval($result[transactions][transaction][amount][total])*100,
+                         'emailUser' => $transaction['transactions'][0]['payee']['email'],
+                         'value' => floatval($transaction['transactions'][0]['amount']['total'])*100,
                          'idTheme' => $request->input('th'),
                          'idPlan' => $request->input('pl')
                         ];

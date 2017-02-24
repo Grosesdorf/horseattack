@@ -9,8 +9,8 @@ function reportError(msg) {
 $(document).ready(function() {
 
     // $("#stripeModalBox").modal('show');
-    Stripe.setPublishableKey('pk_test_t9LfL4nE4hH7owXEbgO2u4CJ'); //sandbox
-    // Stripe.setPublishableKey('pk_live_rsPunoTSjI9FfHAEZjKqsPES'); //live
+    // Stripe.setPublishableKey('pk_test_t9LfL4nE4hH7owXEbgO2u4CJ'); //sandbox
+    Stripe.setPublishableKey('pk_live_rsPunoTSjI9FfHAEZjKqsPES'); //live
 
 
     // STRIPE

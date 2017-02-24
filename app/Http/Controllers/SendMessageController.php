@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\AttackPlan;
+use App\Sign;
 use Illuminate\Http\Request;
 use Validator;
 use Twilio\Rest\Client; 
 
-class SendMessageController extends Controller
-{
+class SendMessageController extends Controller{
     /**
      * Create a new controller instance.
      *
@@ -66,81 +67,176 @@ class SendMessageController extends Controller
 
     public function send(Request $request){
 
-      dd($request->all());
-      $arrTwilio = [];
-
-      $toPhone = (substr($request->input("toPhone"), 0, 2) === '095') ? '+38'.$request->input("toPhone") : '+1'.$request->input("toPhone");
-      $fromUser = $request->input("fromUser");
-      $textMsg = $request->input("textMsg");
-      $urlImage = $request->input("urlImage");
-
       $tssid = $_ENV['TWILIO_TEST_ACCOUNT_SID'];
       $tstoken = $_ENV['TWILIO_TEST_AUTHTOKEN'];
       $from = $_ENV['TWILIO_FROM'];
+      // dd($request->all());
+      $arrTwilio = [];
+      $arrRand = [];
+      $urlImage = [];
+      $arrSigns = [];
 
-      $arrTwilio = ['from' => $from,
-                    'body' => 'Horses of Math Attack from '.$fromUser. ". " .$textMsg,
-                    'mediaUrl' => $urlImage
-                    ];
+      $toPhone = (substr($request->input("toPhone"), 0, 3) == '095') ?
+                       '+38'.$request->input("toPhone") : 
+                       '+1'.$request->input("toPhone");
+      
+      $fromUser = $request->input("fromUser");
+      $emailUser = (null !== ($request->input("emailUser"))) ? $request->input("emailUser") : 'NoEmail';
+      $value = (int)$request->input("value");
+      $idTheme = $request->input("idTheme");
+      $idPlan = $request->input("idPlan");
+      $textMsg = $request->input("textMsg");
+      
+       if($textMsg == null){
+        $textMsg = '';
+       }
+       elseif((substr($textMsg, -1) != '.') && substr($textMsg, -1) != '!' && substr($textMsg, -1) != '?'){
+        $textMsg .= '.';
+        $textMsg = ucfirst($textMsg);
+       }
+       else{
+        $textMsg = ucfirst($textMsg);
+       }
+    
+      $countMsg = AttackPlan::where('id', $idPlan)->value("count_msg");
+      
+      while(true) { 
+        if(count($arrRand) == (int)$countMsg){
+          break;
+        }
+        elseif ($countMsg == 24) {
+            $arrRand = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
+            break;
+        }
+        else{
+          $i = rand(1, 23);
+          if(!in_array($i, $arrRand)){
+            $arrRand[] += $i;  
+          }
+        }
+      }
+
+      foreach ($arrRand as $value) {
+        $urlImage[] = "https://s3-us-west-2.amazonaws.com/bucket-attack/horses/sheet2square".$value.".jpeg";
+      }
+
+      $arrRand = [];
+      // $countSigns = (int)$countMsg / 3;
+
+      // while(true) { 
+      //   if(count($arrRand) == $countSigns){
+      //     break;
+      //   }
+      //   else{
+      //     $i = rand(1, 18);
+      //     if(!in_array($i, $arrRand)){
+      //       $arrRand[] += $i;  
+      //     }
+      //   }
+      // }
+      $countSigns = (int)$countMsg;
+
+      while(true) { 
+        if(count($arrRand) == $countSigns){
+          break;
+        }
+        else{
+          $i = rand(1, 18);
+          if(!in_array($i, $arrRand)){
+            $arrRand[] += $i;  
+          }
+        }
+      }
+
+      foreach ($arrRand as $value) {
+        $arrSigns[] = Sign::where('id', $value)->value("name");
+      }
 
       $sms = new Client($tssid, $tstoken);
 
       $flag = false;
-      
+
       while(true){
-        $tmpUrlImage = [];
-        // dd($urlImage);
-        if(!empty($urlImage) && ($flag === false)){
-          for($i = 0; $i < 3; $i++){
-            $tmpUrlImage[] = array_shift($urlImage);
-          }
-          // dd("1 ", $urlImage, $tmpUrlImage);
+        if($flag == false&&!empty($urlImage)){
+          $arrTwilio = ['from' => $from,
+                'body' => 'Horses of Math Attack from '.$fromUser. ". " .$textMsg. " ".array_shift($arrSigns),
+                'mediaUrl' => array_shift($urlImage)
+                ];
           $flag = true;
-          $arrTwilio = ['from' => $from,
-                    'body' => 'Horses of Math Attack from '.$fromUser. ". " .$textMsg,
-                    'mediaUrl' => $tmpUrlImage
-                    ];
           $sms->messages->create(
-          // the number you'd like to send the message to
-          $toPhone,
-          $arrTwilio
-          );  
-          continue;
-        }
-        elseif(!empty($urlImage) && $flag == true){
-          for($i = 0; $i < 3; $i++){
-            $tmpUrlImage[] = array_shift($urlImage);
-          }
-          // dd("2 ", $urlImage, $tmpUrlImage);
-          $arrTwilio = ['from' => $from,
-                    'body' => 'Horses of Math Attack from '.$fromUser.".",
-                    'mediaUrl' => $tmpUrlImage
-                    ];
-          $sms->messages->create(
-          // the number you'd like to send the message to
-          $toPhone,
-          $arrTwilio
+            $toPhone,
+            $arrTwilio
           );
-          continue;
+          // echo '<pre>';
+          // var_dump($arrTwilio);
+          // echo '</pre>';
+        }
+        elseif(!empty($urlImage)){
+          sleep(1);
+          $arrTwilio = ['from' => $from,
+                'body' => array_shift($arrSigns),
+                'mediaUrl' => array_shift($urlImage)
+                ];
+          $sms->messages->create(
+            $toPhone,
+            $arrTwilio
+          );
+          // echo '<pre>';
+          // var_dump($arrTwilio);
+          // echo '</pre>';
         }
         else{
           break;
-        }              
+        }
+      }
       
-      return redirect('/')->with('success', 'Cheers! Your message has been sent!');
-
-      // dd($toPhone, $arrTwilio);
-
-      // $sms = new Client($tssid, $tstoken);
-      // // Use the client to do fun stuff like send text messages!
-      // $sms->messages->create(
-      //     // the number you'd like to send the message to
+      // while(true){
+      //   $tmpUrlImage = [];
+      //   if(!empty($urlImage) && ($flag == false)){
+      //     for($i = 0; $i < 3; $i++){
+      //       $tmpUrlImage[] = array_shift($urlImage);
+      //     }
+      //     $flag = true;
+      //     $arrTwilio = ['from' => $from,
+      //           'body' => 'Horses of Math Attack from '.$fromUser. ". " .$textMsg. " ".array_shift($arrSigns),
+      //           'mediaUrl' => $tmpUrlImage
+      //                  ];
+      //     $sms->messages->create(
       //     $toPhone,
       //     $arrTwilio
-      // );
+      //     );
+      //     sleep(2);
+      //     // echo '<pre>';
+      //     // var_dump($arrTwilio);
+      //     // echo '</pre>';
 
-      // return redirect('/')->with('success', 'Cheers! Your message has been sent!');
+      //     continue;
+      //   }
+      //   elseif(!empty($urlImage) && $flag == true){
+      //     for($i = 0; $i < 3; $i++){
+      //       $tmpUrlImage[] = array_shift($urlImage);
+      //     }
+      //     $arrTwilio = ['from' => $from,
+      //               'body' => array_shift($arrSigns),
+      //               'mediaUrl' => $tmpUrlImage
+      //               ];
+      //     $sms->messages->create(
+      //     $toPhone,
+      //     $arrTwilio
+      //     );
+      //     sleep(1);
+      //     // echo '<pre>';
+      //     // var_dump($arrTwilio);
+      //     // echo '</pre>';
 
+      //     continue;
+      //   }
+      //   else{
+      //     break;
+      //   }              
+      // }
+
+      return redirect('/')->with('success', 'Cheers! Your message has been sent!');
     }
   }
-}
+

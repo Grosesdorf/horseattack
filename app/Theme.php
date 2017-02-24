@@ -16,4 +16,9 @@ class Theme extends Model
     {
         return $this->hasMany('App\AttackPlan');
     }
+
+    public function signs()
+    {
+        return $this->hasMany('App\Sign');
+    }
 }
