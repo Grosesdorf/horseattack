@@ -12,27 +12,27 @@
                 <div class="form-group">
                 <div class="row">
                     <div class="col-md-12">
-                        <input type="text" id="cardNumber" class="form-control" name="cardNumber" size="20" placeholder="Enter Card Number" autocomplete="off"/>
+                        <input type="text" id="cardNumber" class="form-control shadow-hors" name="cardNumber" size="20" placeholder="Enter Card Number" autocomplete="off"/>
                     </div>
                 </div>
                 </div>
                 <div class="form-group">
                 <div class="row ">
                     <div class="col-md-4">
-                        <input type="text" id="cardMM" class="form-control" name="mmCard" size="2" placeholder="MM" />
+                        <input type="text" id="cardMM" class="form-control shadow-hors" name="mmCard" size="2" placeholder="MM" />
                     </div>
                     <div class="col-md-4">
-                        <input type="text" id="cardYY" class="form-control" name="yyCard" size="2" placeholder="YY" />
+                        <input type="text" id="cardYY" class="form-control shadow-hors" name="yyCard" size="2" placeholder="YY" />
                     </div>
                     <div class="col-md-4">
-                        <input type="text" id="cardCCV" class="form-control" name="ccvCard" size="3" placeholder="CCV" />
+                        <input type="text" id="cardCCV" class="form-control shadow-hors" name="ccvCard" size="3" placeholder="CCV" />
                     </div>
                 </div>
                 </div>
                 <div class="form-group">
                 <div class="row">
                     <div class="col-md-12">
-                        <input type="email" class="form-control" name="emailUser" placeholder="Enter Your Email" />
+                        <input type="email" class="form-control shadow-hors" name="emailUser" placeholder="Enter Your Email" />
                     </div>
                 </div>
                 </div>
