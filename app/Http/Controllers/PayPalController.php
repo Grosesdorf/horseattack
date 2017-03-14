@@ -84,15 +84,6 @@ class PayPalController extends Controller{
                                                                           '&ms='.urlencode($ms)) 
                      ->setCancelUrl('http://someattack.local/paypal/cancel');
 
-        // $redirectUrls->setReturnUrl('http://www.fockie.com/paypal/valid?ph='.urlencode($ph).
-        //                                                                   '&pl='.urlencode($pl).   
-        //                                                                   '&th='.urlencode($th).   
-        //                                                                   '&us='.urlencode($us).  
-        //                                                                   '&ms='.urlencode($ms)) 
-        //              ->setCancelUrl('http://www.fockie.com/paypal/cancel');
-
-
-
         // Set payment amount
         $amount = new Amount();
         $amount->setCurrency("USD")

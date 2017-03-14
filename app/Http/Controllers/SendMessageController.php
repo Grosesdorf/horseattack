@@ -28,6 +28,8 @@ class SendMessageController extends Controller{
 
       $phonePattern = '/\b\d{3}[-.]?\d{3}[-.]?\d{4}\b/';
 
+      //Валидация формы
+
       $validator = Validator::make($request->all(), [
         'UserPhone' => 'required|regex:' . $phonePattern,
         'UserName' => 'required|alpha',
@@ -66,20 +68,19 @@ class SendMessageController extends Controller{
     }
 
     public function send(Request $request){
-
+      // Вытягиваем ключи с .env
       $tssid = $_ENV['TWILIO_TEST_ACCOUNT_SID'];
       $tstoken = $_ENV['TWILIO_TEST_AUTHTOKEN'];
       $from = $_ENV['TWILIO_FROM'];
-      // dd($request->all());
+      
       $arrTwilio = [];
       $arrRand = [];
       $urlImage = [];
       $arrSigns = [];
-
+      // Готовим данные для отправки ММС
       $toPhone = (substr($request->input("toPhone"), 0, 3) == '095') ?
                        '+38'.$request->input("toPhone") : 
                        '+1'.$request->input("toPhone");
-      
       $fromUser = $request->input("fromUser");
       $emailUser = (null !== ($request->input("emailUser"))) ? $request->input("emailUser") : 'NoEmail';
       $value = (int)$request->input("value");
@@ -99,7 +100,8 @@ class SendMessageController extends Controller{
        }
     
       $countMsg = AttackPlan::where('id', $idPlan)->value("count_msg");
-      
+      // Генерируем массив случайных чисел по количеству ММС
+      // Если картинок будет больше 30, можно $countMsg == 24 выбросить
       while(true) { 
         if(count($arrRand) == (int)$countMsg){
           break;
@@ -115,25 +117,13 @@ class SendMessageController extends Controller{
           }
         }
       }
-
+      // Формируем ссылки на картинки с учетом массива случайных чисел
       foreach ($arrRand as $value) {
         $urlImage[] = "https://s3-us-west-2.amazonaws.com/bucket-attack/horses/sheet2square".$value.".jpeg";
       }
-
+      // Готовим массив случайных чисел для подписей картинок по количеству ММС
+      // !!! Подписи необходимо добавить в БД.. Сейчас 18. Необходимо как минимум 30
       $arrRand = [];
-      // $countSigns = (int)$countMsg / 3;
-
-      // while(true) { 
-      //   if(count($arrRand) == $countSigns){
-      //     break;
-      //   }
-      //   else{
-      //     $i = rand(1, 18);
-      //     if(!in_array($i, $arrRand)){
-      //       $arrRand[] += $i;  
-      //     }
-      //   }
-      // }
       $countSigns = (int)$countMsg;
 
       while(true) { 
@@ -141,21 +131,22 @@ class SendMessageController extends Controller{
           break;
         }
         else{
+          //Жесткое условие, в идеале взять количество подписей из БД
           $i = rand(1, 18);
           if(!in_array($i, $arrRand)){
             $arrRand[] += $i;  
           }
         }
       }
-
+      // Формируем массив с подписями
       foreach ($arrRand as $value) {
         $arrSigns[] = Sign::where('id', $value)->value("name");
       }
-
+      // Производим отправку ММС
       $sms = new Client($tssid, $tstoken);
 
       $flag = false;
-
+      // Одно ММС -> один эллемент массивов
       while(true){
         if($flag == false&&!empty($urlImage)){
           $arrTwilio = ['from' => $from,
@@ -167,9 +158,6 @@ class SendMessageController extends Controller{
             $toPhone,
             $arrTwilio
           );
-          // echo '<pre>';
-          // var_dump($arrTwilio);
-          // echo '</pre>';
         }
         elseif(!empty($urlImage)){
           sleep(1);
@@ -189,52 +177,6 @@ class SendMessageController extends Controller{
           break;
         }
       }
-      
-      // while(true){
-      //   $tmpUrlImage = [];
-      //   if(!empty($urlImage) && ($flag == false)){
-      //     for($i = 0; $i < 3; $i++){
-      //       $tmpUrlImage[] = array_shift($urlImage);
-      //     }
-      //     $flag = true;
-      //     $arrTwilio = ['from' => $from,
-      //           'body' => 'Horses of Math Attack from '.$fromUser. ". " .$textMsg. " ".array_shift($arrSigns),
-      //           'mediaUrl' => $tmpUrlImage
-      //                  ];
-      //     $sms->messages->create(
-      //     $toPhone,
-      //     $arrTwilio
-      //     );
-      //     sleep(2);
-      //     // echo '<pre>';
-      //     // var_dump($arrTwilio);
-      //     // echo '</pre>';
-
-      //     continue;
-      //   }
-      //   elseif(!empty($urlImage) && $flag == true){
-      //     for($i = 0; $i < 3; $i++){
-      //       $tmpUrlImage[] = array_shift($urlImage);
-      //     }
-      //     $arrTwilio = ['from' => $from,
-      //               'body' => array_shift($arrSigns),
-      //               'mediaUrl' => $tmpUrlImage
-      //               ];
-      //     $sms->messages->create(
-      //     $toPhone,
-      //     $arrTwilio
-      //     );
-      //     sleep(1);
-      //     // echo '<pre>';
-      //     // var_dump($arrTwilio);
-      //     // echo '</pre>';
-
-      //     continue;
-      //   }
-      //   else{
-      //     break;
-      //   }              
-      // }
 
       return redirect('/')->with('success', 'Cheers! Your message has been sent!');
     }

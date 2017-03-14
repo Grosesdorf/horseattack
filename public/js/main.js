@@ -9,8 +9,8 @@ function reportError(msg) {
 $(document).ready(function() {
 
     // $("#stripeModalBox").modal('show');
-    // Stripe.setPublishableKey('pk_test_t9LfL4nE4hH7owXEbgO2u4CJ'); //sandbox
-    Stripe.setPublishableKey('pk_live_rsPunoTSjI9FfHAEZjKqsPES'); //live
+    Stripe.setPublishableKey('pk_test_t9LfL4nE4hH7owXEbgO2u4CJ'); //sandbox
+    // Stripe.setPublishableKey(''); //live
 
 
     // STRIPE
@@ -42,8 +42,7 @@ $(document).ready(function() {
         reportError('The expiration date appears to be invalid.');
     }
 
-            // Validate other form elements, if needed!
-
+        // Validate other form elements, if needed!
         // Check for errors:
     
     if (!error) {
@@ -56,7 +55,7 @@ $(document).ready(function() {
         }, 
         stripeResponseHandler);
     }
-            // Prevent the form from submitting:
+        // Prevent the form from submitting:
         return false;
 
     }); // Form submission
@@ -66,8 +65,6 @@ $(document).ready(function() {
     $('body').css('backgroundImage', 'url('+bodyPathImg+')');
 
     $( "#selectTheme" ).change(function() {
-        // $urlSite = location.hostname;
-        // location = $urlSite+'/showplan/'+$('#selectTheme').val();
         location = '/showplan/'+$('#selectTheme').val();
     });
 
@@ -85,23 +82,17 @@ $(document).ready(function() {
 function stripeResponseHandler(status, response) {
 
     // Check for an error:
-    if (response.error) {
-
+    if (response.error){
         reportError(response.error.message);
-
-    } else { // No errors, submit the form:
-
+    } 
+    else { // No errors, submit the form:
       var f = $("#stripeForm");
-
       // Token contains id, last4, and card type:
       var token = response['id'];
-
       // Insert the token into the form so it gets submitted to the server
       f.append("<input type='hidden' name='stripeToken' value='" + token + "' />");
-
       // Submit the form:
       f.get(0).submit();
-
     }
 
 } // End of stripeResponseHandler() function.
